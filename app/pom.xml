@@ -51,6 +51,15 @@
 			<version>1.2.2</version>
 		</dependency>
 
+		<!-- Zen by Aikido (compile-time only, the agent provides these classes at runtime) -->
+		<dependency>
+			<groupId>dev.aikido</groupId>
+			<artifactId>agent_api</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>/opt/zen/agent_api.jar</systemPath>
+		</dependency>
+
 		<!-- Spring dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
