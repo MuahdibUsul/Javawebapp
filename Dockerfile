@@ -13,13 +13,21 @@ ENV MYSQL_DATABASE=blab
 # Copy DB schema for DB initialisation
 COPY db /docker-entrypoint-initdb.d
 
-# Install OpenJDK 8 and Maven
+# Install OpenJDK 17 (required by the Aikido Zen agent) and Maven
 # Also install the fortune-mod fortune game
 # https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu
 RUN apt-get update \
-    && apt-get -y install openjdk-8-jdk-headless openjdk-8-jre-headless maven fortune-mod iputils-ping \
+    && apt-get -y install openjdk-17-jdk-headless openjdk-17-jre-headless maven fortune-mod iputils-ping curl \
     && ln -s /usr/games/fortune /bin/ \
+    && ln -s /usr/lib/jvm/java-17-openjdk-$(dpkg --print-architecture) /usr/lib/jvm/java-17-openjdk \
     && rm -rf /var/lib/apt/lists/*
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+# Install Aikido Zen
+RUN mkdir -p /opt/zen \
+    && curl -fsSL https://github.com/AikidoSec/firewall-java/releases/download/1.1.32/zen.tar.gz | tar -xz -C /opt/zen \
+    && chmod -R a+rwX /opt/zen
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
